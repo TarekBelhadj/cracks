@@ -1,0 +1,85 @@
+:root {
+    --bg-col: #ececec;
+    --fg-col: #202020;
+    --ac-col: #fad700;
+}
+
+html, body {
+    margin: auto;
+    padding: 0px;
+    font-size: 18px;
+    font-family: Verdana, serif;
+    background-color: var(--bg-col);
+    color: var(--fg-col);
+}
+
+input, textarea, select {
+    color: var(--fg-col);
+    background-color: var(--bg-col);
+    border: 1px ridge var(--fg-col);
+    border-radius: 2px;
+}
+
+input[type="submit"], button {
+    font-weight: bold;
+    border-style: outset;
+    box-shadow: 2px 2px 3px var(--fg-col);
+}
+
+input[type="submit"]:hover, input[type="submit"]:focus, button:hover, button:focus {
+    color: var(--ac-col);
+    border-color: var(--ac-col);
+    box-shadow: 2px 2px 3px var(--ac-col);
+}
+
+input:hover, input:focus, textarea:hover, textarea:focus, select:hover, select:focus {
+    border-color: var(--ac-col);
+}
+
+ul, li {
+    list-style: none;
+    padding: none;
+}
+
+header menu {
+    display: flex;
+}
+
+header menu li {
+    flex: 1;
+}
+
+.flex {
+    display: flex;
+}
+
+.crack {
+    margin: auto;
+    border: 2px outset var(--fg-col);
+    border-radius: 3px;
+    box-shadow: 2px 2px 5px var(--fg-col);
+    padding: 5px;
+}
+
+.crack footer {
+    font-size: x-small;
+    font-style: italic;
+}
+
+.votebar {
+    font-size: small;
+    float: right;
+}
+
+.dovote {
+    cursor: pointer;
+}
+
+.crack p {
+    clear: both;
+}
+
+.crack:hover {
+    border-color: var(--ac-col);
+    box-shadow: 2px 2px 5px var(--ac-col);
+}
