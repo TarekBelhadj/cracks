@@ -1,10 +1,23 @@
 <?php
-$systemMdp = 'pwd1234';
-
 require_once 'config.php';
 
-if($systemMdp != $_REQUEST['mdp']) {
-    echo 'Accès interdit !';
+function getCurrentUser() {
+    global $db;
+    $userId = $_SESSION['userid'];
+    $q = 'SELECT * FROM users WHERE id = ?';
+    $stmt = $db->prepare($q);
+    $stmt->execute([$userId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+if (!Auth::getInstance()->isLogged()) {
+    header('Location: /?inc=login');
+    exit;
+}
+
+$currentUser = getCurrentUser();
+if (!$currentUser || $currentUser['isadmin'] != 1) {
+    echo 'Accès réservé aux administrateurs !';
     exit;
 }
 
