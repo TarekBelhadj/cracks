@@ -32,9 +32,14 @@
         if(!empty($_SERVER['REQUEST_METHOD'])) {
             if('GET' === strtoupper($_SERVER['REQUEST_METHOD'])) {
                 if(!empty($_REQUEST['cid'])) {
-                    $v = countVotes(intval($_REQUEST['cid']), $_REQUEST['uid']);
-                    $result['val'] = $v['votes'];
-                    $result['voted'] = $v['voted'];
+                    if(!Auth::getInstance()->isLogged()) {
+                        $result['errors'][] = 'Authentication required';
+                    } else {
+                        $sessionUserId = $_SESSION['userid'];
+                        $v = countVotes(intval($_REQUEST['cid']), $sessionUserId);
+                        $result['val'] = $v['votes'];
+                        $result['voted'] = $v['voted'];
+                    }
                 } else {
                     $result['errors'][] = 'Not found';
                 }
