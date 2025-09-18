@@ -1,4 +1,8 @@
 <?php
+    if (!Auth::getInstance()->isLogged()) {
+    header('Location: /?inc=login');
+    exit;
+    }
     if(!empty($_REQUEST['val'])) {
         $q = 'insert into cracks (content, owner, datesend) '
                 . ' values("'.nl2br($_REQUEST['content']).'", "'.$_REQUEST['owner'].'", '.time().')';
