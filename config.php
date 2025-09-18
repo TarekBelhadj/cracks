@@ -24,7 +24,7 @@ function displayCrack($crack) {
                 . '<span class="dovote" data-val="-1">👎</span>'
             . '</div>';
     }
-    echo '<p>'.Markdown::_($crack['content']).'</p>';
+    echo '<p>'.Markdown::_(htmlspecialchars($crack['content'], ENT_QUOTES, 'UTF-8')).'</p>';
     if(!empty($crack['login'])) {
         echo '<footer>Envoyé par '.$crack['login'].' le '.date('Y-m-d H:i', intval($crack['datesend'])).'</footer>';
     }
