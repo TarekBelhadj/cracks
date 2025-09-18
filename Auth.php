@@ -24,12 +24,9 @@ class Auth {
     
     public function tryLog($login, $pwd): bool {
         global $db;
-        $q = 'select * from users where login="'.$login.'" and pwd="'.md5($pwd).'"';
-        $found = null;
-        $ls = $db->query($q, PDO::FETCH_ASSOC);
-        if(!empty($ls)) {
-            foreach($ls as $l) { $found = $l; }
-        }
+        $requete = $db->prepare('SELECT * FROM users WHERE login = :login AND pwd = :pwd');
+        $requete->execute([':login' => $login, ':pwd' => md5($pwd)]);
+        $found = $requete->fetch(PDO::FETCH_ASSOC);
         if($found) {
             $this->log($found['id']);
             return true;
