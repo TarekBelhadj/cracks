@@ -18,21 +18,22 @@ class Auth {
     
     public function subscribe($login, $pwd) {
         global $db;
-        $q = 'insert into users values(null, "'.addslashes($login).'", "'.md5($pwd).'", 0)';
-        $db->query($q);
+        $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT); // bcrypt/argon2
+        $q = $db->prepare('INSERT INTO users (login, pwd, isadmin) VALUES (:login, :pwd, 0)');
+        $q->execute([':login' => $login, ':pwd' => $hashedPwd]);
     }
     
     public function tryLog($login, $pwd): bool {
         global $db;
-        $requete = $db->prepare('SELECT * FROM users WHERE login = :login AND pwd = :pwd');
-        $requete->execute([':login' => $login, ':pwd' => md5($pwd)]);
+        $requete = $db->prepare('SELECT * FROM users WHERE login = :login LIMIT 1');
+        $requete->execute([':login' => $login]);
         $found = $requete->fetch(PDO::FETCH_ASSOC);
-        if($found) {
+
+        if ($found && password_verify($pwd, $found['pwd'])) {
             $this->log($found['id']);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
     
     public function log($id) {
@@ -53,13 +54,23 @@ class Auth {
     
     public function getCodeFromLogin($login) {
         global $db;
-        $q = 'select id, pwd from users where login="'.$login.'"';
-        return $db->query($q)->fetch(PDO::FETCH_ASSOC);
+        $q = $db->prepare('SELECT id, pwd FROM users WHERE login = :login');
+        $q->execute([':login' => $login]);
+        return $q->fetch(PDO::FETCH_ASSOC);
     }
     
     public function resetPwd($id, $code, $newPwd) {
-        global $db;
-        $q = 'update users set pwd="'.md5($newPwd).'" where id="'.$id.'" and pwd="'.$code.'"';
-        $db->query($q);
+    global $db;
+    $q = $db->prepare('SELECT pwd FROM users WHERE id = :id');
+    $q->execute([':id' => $id]);
+    $user = $q->fetch(PDO::FETCH_ASSOC);
+
+    if ($user && hash_equals($user['pwd'], $code)) {
+        $hashedPwd = password_hash($newPwd, PASSWORD_DEFAULT);
+        $update = $db->prepare('UPDATE users SET pwd = :pwd WHERE id = :id');
+        $update->execute([':pwd' => $hashedPwd, ':id' => $id]);
+    
     }
+}
+
 }
