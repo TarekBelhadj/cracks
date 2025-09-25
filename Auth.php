@@ -7,13 +7,9 @@
  */
 class Auth {
     use tSingleton;
-    const COOKIENAME = 'authbypass';
     
     protected function __construct(){
         session_start();
-        if(isset($_COOKIE[self::COOKIENAME])) {
-            $this->log($_COOKIE[self::COOKIENAME]);
-        }
     }
     
     public function subscribe($login, $pwd) {
