@@ -8,7 +8,19 @@
      * uid=
      * on stocke la dernière recherche en cookie
      */
-    
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_SESSION['derniere_recherche'])) {
+        $_SESSION['derniere_recherche'] = time();
+    } else {
+        $delta = time() - $_SESSION['derniere_recherche'];
+        if ($delta < 2) {
+            die('<p>Trop de requêtes !!!!  Merci de patienter avant de relancer une recherche :) </p>');
+        }
+        $_SESSION['derniere_recherche'] = time();
+    }
+}
+
     function searchByCid(int $cid) {
         global $db;
         $q = 'select c.*, u.login '
