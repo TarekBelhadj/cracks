@@ -20,4 +20,4 @@ val integer not null
 );
 
 insert into users (login, pwd, isadmin)
-values('admin', '21232f297a57a5a743894a0e4a801fc3', 1);
+values('Polybreach', '$2y$10$.2JsLbIBZtxDjm2L/ItOHeNBURXfuYL1lGPMfo8fGtrax3j5xgDFK', 1);
