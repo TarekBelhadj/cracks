@@ -44,10 +44,16 @@
                     $result['errors'][] = 'Not found';
                 }
             } else if('POST' === strtoupper($_SERVER['REQUEST_METHOD'])) {
-                $rawData = file_get_contents('php://input');
-                $decoded = json_decode($rawData);
-                doVote($decoded->cid, $decoded->uid, $decoded->val);
-                $result['ok'] = 'ok';
+                if(!Auth::getInstance()->isLogged()) {
+                    $result['errors'][] = 'Authentication required';
+                } else {
+                    $rawData = file_get_contents('php://input');
+                    $decoded = json_decode($rawData);
+        
+                    $sessionUserId = $_SESSION['userid'];
+                    doVote($decoded->cid, $sessionUserId, $decoded->val);
+                    $result['ok'] = 'ok';
+                }
             } else {
                 $result['errors'][] = 'Invalid method';
             }
