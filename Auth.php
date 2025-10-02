@@ -29,6 +29,7 @@ class Auth {
             $this->log($found['id']);
             return true;
         }
+        sleep(rand(2, 4));
         return false;
     }
     
