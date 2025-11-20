@@ -26,7 +26,7 @@ function displayCrack($crack) {
     }
     echo '<p>'.Markdown::_(htmlspecialchars($crack['content'], ENT_QUOTES, 'UTF-8')).'</p>';
     if(!empty($crack['login'])) {
-        echo '<footer>Envoyé par '.$crack['login'].' le '.date('Y-m-d H:i', intval($crack['datesend'])).'</footer>';
+        echo '<footer>Envoyé par '.htmlspecialchars($crack['login'], ENT_QUOTES, 'UTF-8').' le '.date('Y-m-d H:i', intval($crack['datesend'])).'</footer>';
     }
     echo '</div>';
     if($voteable) {
