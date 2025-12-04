@@ -22,64 +22,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
     function searchByCid(int $cid) {
-        global $db;
-        $q = 'select c.*, u.login '
-                . ' from cracks c '
-                . ' left join users u on u.id=c.owner '
-                . " where c.id=$cid";
-        $found = null;
-        $ls = $db->query($q, PDO::FETCH_ASSOC);
-        if(!empty($ls)) {
-            foreach($ls as $l) { $found = $l; }
-        }
-        if($found) {
-            displayCrack($found);
-        } else {
-            echo '<p>Crack introuvable !</p>';
-        }
+    global $db;
+
+    $requetePreparee = $db->prepare('
+        SELECT c.*, u.login
+        FROM cracks c
+        LEFT JOIN users u ON u.id = c.owner
+        WHERE c.id = :cid
+    ');
+
+    $requetePreparee->bindValue(':cid', $cid, PDO::PARAM_INT);
+    $requetePreparee->execute();
+
+    $found = $requetePreparee->fetch(PDO::FETCH_ASSOC);
+
+    if ($found) {
+        displayCrack($found);
+    } else {
+        echo '<p>Crack introuvable !</p>';
     }
+}
+
     
-    function searchByUid($uid) {
-        global $db;
-        $q = 'select c.*, u.login '
-                . ' from cracks c '
-                . ' left join users u on u.id=c.owner '
-                . " where c.owner=$uid";
-        $found = [];
-        $ls = $db->query($q, PDO::FETCH_ASSOC);
-        if(!empty($ls)) {
-            foreach($ls as $l) { $found[] = $l; }
+    function searchByUid(int $uid) {
+    global $db;
+
+    $requetePreparee = $db->prepare('
+        SELECT c.*, u.login
+        FROM cracks c
+        LEFT JOIN users u ON u.id = c.owner
+        WHERE c.owner = :uid
+    ');
+
+    $requetePreparee->bindValue(':uid', $uid, PDO::PARAM_INT);
+    $requetePreparee->execute();
+
+    $found = $requetePreparee->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($found) {
+        foreach ($found as $c) {
+            displayCrack($c);
         }
-        if(count($found)) {
-            foreach($found as $c) {
-                displayCrack($c);
-            }
-        } else {
-            echo '<p>Aucun crack pour cet utilisateur !</p>';
-        }
+    } else {
+        echo '<p>Aucun crack pour cet utilisateur !</p>';
     }
+}
+
     
-    function searchByContent($content) {
-        global $db;
-        $q = 'select c.*, u.login '
-                . ' from cracks c '
-                . ' left join users u on u.id=c.owner '
-                . " where c.content like '$content'";
-        $found = [];
-        $ls = $db->query($q, PDO::FETCH_ASSOC);
-        if(!empty($ls)) {
-            foreach($ls as $l) { $found[] = $l; }
+    function searchByContent(string $content) {
+    global $db;
+
+    $requetePreparee = $db->prepare('
+        SELECT c.*, u.login
+        FROM cracks c
+        LEFT JOIN users u ON u.id = c.owner
+        WHERE c.content LIKE :content
+    ');
+
+    $requetePreparee->bindValue(':content', $content, PDO::PARAM_STR);
+    $requetePreparee->execute();
+
+    $found = $requetePreparee->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($found) {
+        echo '<div class="flex">';
+        foreach ($found as $c) {
+            displayCrack($c);
         }
-        if(count($found)) {
-            echo '<div class="flex">';
-            foreach($found as $c) {
-                displayCrack($c);
-            }
-            echo '</div>';
-        } else {
-            echo '<p>Aucun crack pour cette recherche !</p>';
-        }
+        echo '</div>';
+    } else {
+        echo '<p>Aucun crack pour cette recherche !</p>';
     }
+}
+
     
     $cid = 0;
     $uid = 0;
