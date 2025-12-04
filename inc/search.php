@@ -81,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $requetePreparee->bindValue(':content', $content, PDO::PARAM_STR);
     $requetePreparee->execute();
-
     $found = $requetePreparee->fetchAll(PDO::FETCH_ASSOC);
 
     if ($found) {
