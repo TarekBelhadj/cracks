@@ -41,7 +41,7 @@ if (!$currentUser || $currentUser['isadmin'] != 1) {
         <?php if(!empty($_REQUEST['valid'])) {
             $found = Auth::getInstance()->getCodeFromLogin($_REQUEST['login']);
             ?>
-        <kbd><?php echo $_SERVER['HTTP_HOST'].'/?inc=rst&amp;id='.$found['id'].'&amp;code='.$found['pwd']; ?></kbd>
+        <kbd><?php echo $_SERVER['HTTP_HOST'].'/?inc=rst&amp;id='.$found['id']; ?></kbd>
         <?php } ?>
     </body>
 </html>
